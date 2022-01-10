@@ -40,6 +40,8 @@ function addMember() {
             },
         ])
         .then(function({name, id, email, role}) {
+            console.log(role)
+            let newMember;
             let roleInfo = ''
             if (role === 'Manager') {
                 inquirer
@@ -48,6 +50,13 @@ function addMember() {
                         name: 'roleInfo',
                         message: 'What is their Office Number?'
                     })
+                    .then(function({roleInfo}) {
+                        newMember = new Manager(name, id, email, roleInfo)
+                        //console.log(newMember)
+                        team.push(newMember);
+                        anotherMember()
+                        console.log(team)
+                    })
             }
             else if (role === 'Engineer') {
                 inquirer
@@ -55,7 +64,14 @@ function addMember() {
                         type: 'text',
                         name: 'roleInfo',
                         message: 'What is their Github?'
-                })
+                    })
+                    .then(function({roleInfo}) {
+                        newMember = new Engineer(name, id, email, roleInfo)
+                        //console.log(newMember)
+                        team.push(newMember);
+                        anotherMember()
+                        console.log(team)
+                    })
             }
             else {
                 inquirer
@@ -64,21 +80,31 @@ function addMember() {
                         name: 'roleInfo',
                         message: 'What is their School?'
                     })
+                    .then(function({roleInfo}) {
+                        newMember = new Intern(name, id, email, roleInfo)
+                        //console.log(newMember)
+                        team.push(newMember);
+                        anotherMember()
+                        console.log(team)
+                    })
             }
         })
-        .then(function({roleInfo}) {
-            let newMember;
-            if (role === 'Manager') {
-                newMember = new Manager(name, id, email, roleInfo)
-                console.log(newMember)
-            }
-            else if (role === 'Engineer') {
-                newMember = new Engineer(name, id, email, roleInfo)
-                console.log(newMember)
-            }
-            else if (role === 'Intern') {
-                newMember = new Intern(name, id, email, roleInfo)
-                console.log(newMember)
+}
+
+function anotherMember() {
+    inquirer
+        .prompt({
+            type: 'list',
+            name: 'anotherMember',
+            message: 'Would you like to add another member?',
+            choices: [
+                'Yes',
+                'No'
+            ]
+        })
+        .then(function({anotherMember}) {
+            if (anotherMember === 'Yes') {
+                addMember()
             }
         })
 }
